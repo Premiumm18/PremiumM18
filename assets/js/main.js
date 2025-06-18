@@ -58,26 +58,28 @@ document.addEventListener('DOMContentLoaded', function() {
             videoCard.className = 'video-card';
             
             videoCard.innerHTML = `
-                <img src="${video.thumbnail}" alt="${video.title}" class="video-thumbnail">
-                <div class="video-info">
-                    <h3 class="video-title">${video.title}</h3>
-                    <div class="watch-btn-container">
-                        <a href="redirect.html?source=doodstream&url=${encodeURIComponent(video.doodstream)}&ad=${shouldShowAd()}" class="watch-btn doodstream">
-                            <img src="images/terabox.png" alt="Doodstream">
-                            Watch Now
-                        </a>
-                        <span class="watch-subtext">No ads, no login</span>
-                        <a href="redirect.html?source=terabox&url=${encodeURIComponent(video.terabox)}&ad=${shouldShowAd()}" class="watch-btn terabox">
-                            <img src="images/doodstream.png" alt="Terabox">
-                            Watch Now
-                        </a>
-                    </div>
-                </div>
-            `;
-            
-            videoContainer.appendChild(videoCard);
-        });
-    }
+    <img src="${video.thumbnail}" alt="${video.title}" class="video-thumbnail">
+    <div class="video-info">
+        <h3 class="video-title">${video.title}</h3>
+        <div class="watch-btn-container">
+            <div class="btn-wrapper">
+                <a href="redirect.html?source=terabox&url=${encodeURIComponent(video.terabox)}&ad=${shouldShowAd()}" class="watch-btn terabox">
+                    <img src="images/terabox.png" alt="Terabox">
+                    Watch Now
+                </a>
+                <span class="watch-subtext">No ads, no login</span>
+            </div>
+            <div class="btn-wrapper">
+                <a href="redirect.html?source=doodstream&url=${encodeURIComponent(video.doodstream)}&ad=${shouldShowAd()}" class="watch-btn doodstream">
+                    <img src="images/doodstream.png" alt="Doodstream">
+                    Watch Now
+                </a>
+                <span class="watch-subtext">No ads, no login</span>
+            </div>
+        </div>
+    </div>
+`;
+
     
     function filterVideos() {
         let filteredVideos = [...videos];
