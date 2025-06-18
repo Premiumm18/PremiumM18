@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Premium 18+ Videos</title>
+    <meta name="description" content="Premium adult content with high quality videos">
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <!-- Consent Popup (will be shown by JavaScript) -->
+    <div id="consent-popup" class="hidden">
+        <div class="consent-content">
+            <h2>Age Verification & Consent</h2>
+            <p>This website contains adult content and is only for viewers 18+ years old.</p>
+            <p>By entering, you confirm you are at least 18 years of age and consent to viewing adult content.</p>
+            <p>We use ads to keep this service free. Please allow ads to support us.</p>
+            
+            <div class="consent-buttons">
+                <button id="consent-allow" class="btn-allow">I'm 18+</button>
+                <button id="consent-deny" class="btn-deny">I'm Not 18+</button>
+                <button id="consent-exit" class="btn-exit">Exit</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Header -->
+    <header class="site-header">
+        <div class="header-container">
+            <div class="logo">
+                <h1>Premium<span>18+</span></h1>
+            </div>
+            
+            <div class="search-container">
+                <input type="text" id="search-input" placeholder="Search videos...">
+                <button id="search-button"><i class="fas fa-search"></i></button>
+            </div>
+            
+            <div class="social-links">
+                <a href="#" class="social-link"><img src="assets/images/social-facebook.png" alt="Facebook"></a>
+                <a href="#" class="social-link"><img src="assets/images/social-instagram.png" alt="Instagram"></a>
+                <a href="#" class="social-link"><img src="assets/images/social-telegram.png" alt="Telegram"></a>
+                <button id="join-btn" class="join-btn">Join Community</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="category-filter">
+            <button class="filter-btn active" data-category="all">Trending</button>
+            <button class="filter-btn" data-category="bangla">Bangla</button>
+            <button class="filter-btn" data-category="cartoon">Cartoon/Hentai</button>
+            <button class="filter-btn" data-category="premium">Premium</button>
+        </div>
+        
+        <div class="video-grid" id="video-container">
+            <!-- Videos will be loaded here by JavaScript -->
+        </div>
+        
+        <div class="loading-spinner hidden" id="loading-spinner">
+            <div class="spinner"></div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="site-footer">
+        <div class="footer-container">
+            <div class="footer-links">
+                <a href="#">Terms of Service</a>
+                <a href="#">Privacy Policy</a>
+                <a href="#">DMCA</a>
+                <a href="#">2257 Statement</a>
+                <a href="#">Contact</a>
+            </div>
+            <div class="copyright">
+                <p>&copy; 2023 Premium18+. All rights reserved.</p>
+                <p>All models are 18+ years old.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="assets/js/utils.js"></script>
+    <script src="assets/js/ads.js"></script>
+    <script src="assets/js/consent.js"></script>
+    <script src="assets/js/main.js"></script>
+</body>
+</html>
