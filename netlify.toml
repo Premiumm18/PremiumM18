@@ -1,22 +1,66 @@
 [build]
-  command = "echo 'No build needed'"
+  # Basic build settings
+  command = "echo 'Static site - no build required'"
   publish = "."
+  functions = "functions"
+
+[dev]
+  # Local development settings
+  framework = "#static"
+  targetPort = 3000
+  autoLaunch = true
+
+[context.production]
+  # Production-specific settings
+  environment = { 
+    NODE_VERSION = "18", 
+    SECURE = "true",
+    CACHE_CONTROL = "max-age=3600, public"
+  }
 
 [[headers]]
+  # Force HTTPS for all paths
+  for = "/*"
+  [headers.values]
+    Strict-Transport-Security = "max-age=63072000; includeSubDomains; preload"
+    X-Frame-Options = "DENY"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    Content-Security-Policy = "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:;"
+
+[[headers]]
+  # Admin panel protection
   for = "/admin/*"
   [headers.values]
-    Basic-Auth = "admin:$2a$12$8Bwgd53bAuglSbQemwHXBOxfdT3ZjUDDoigmX5eig3/ipAA8FXQ/q"  # Replace with your generated hash
+    Basic-Auth = "admin:$2a$12$jaGMxtjEVdewLl0mEjc83O3ZLfD1vgPwZqKfH.tpP3quw0UMRthbK" # Generate at: https://bcrypt-generator.com/
+    X-Robots-Tag = "noindex, nofollow"
 
 [[redirects]]
+  # Admin panel routing
   from = "/admin/*"
   to = "/admin/index.html"
   status = 200
+  force = true
 
 [[redirects]]
+  # SPA fallback
   from = "/*"
   to = "/index.html"
   status = 200
 
 [functions]
+  # Function configurations
   directory = "functions"
   node_bundler = "esbuild"
+  external_node_modules = ["fs", "path"]
+  included_files = ["videos.json"]
+
+[[plugins]]
+  # Required for Identity (if enabled later)
+  package = "@netlify/plugin-labs"
+  [plugins.inputs]
+  enableIdentity = true
+
+# For future database integration
+#[context.production.environment]
+#  DATABASE_URL = "your_connection_string"
