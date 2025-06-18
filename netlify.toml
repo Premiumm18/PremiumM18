@@ -1,6 +1,11 @@
 [build]
-  command = "echo 'No build needed for static site'"
+  command = "echo 'No build needed'"
   publish = "."
+
+[[headers]]
+  for = "/admin/*"
+  [headers.values]
+    Basic-Auth = "admin:$2a$12$8Bwgd53bAuglSbQemwHXBOxfdT3ZjUDDoigmX5eig3/ipAA8FXQ/q"  # Replace with your generated hash
 
 [[redirects]]
   from = "/admin/*"
@@ -14,3 +19,4 @@
 
 [functions]
   directory = "functions"
+  node_bundler = "esbuild"
