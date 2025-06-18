@@ -57,7 +57,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const videoCard = document.createElement('div');
             videoCard.className = 'video-card';
             
-            videoCard.innerHTML = `
+           videoCard.innerHTML = `
     <img src="${video.thumbnail}" alt="${video.title}" class="video-thumbnail">
     <div class="video-info">
         <h3 class="video-title">${video.title}</h3>
@@ -67,7 +67,6 @@ document.addEventListener('DOMContentLoaded', function() {
                     <img src="images/terabox.png" alt="Terabox">
                     Watch Now
                 </a>
-                <span class="watch-subtext">No ads, no login</span>
             </div>
             <div class="btn-wrapper">
                 <a href="redirect.html?source=doodstream&url=${encodeURIComponent(video.doodstream)}&ad=${shouldShowAd()}" class="watch-btn doodstream">
@@ -79,8 +78,6 @@ document.addEventListener('DOMContentLoaded', function() {
         </div>
     </div>
 `;
-
-    
     function filterVideos() {
         let filteredVideos = [...videos];
         
