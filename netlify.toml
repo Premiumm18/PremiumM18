@@ -44,8 +44,3 @@
   node_bundler = "esbuild"
   external_node_modules = ["fs", "path"]
   included_files = ["videos.json"]
-
-[[plugins]]
-  package = "@netlify/plugin-labs"
-  [plugins.inputs]
-    enableIdentity = true
