@@ -39,4 +39,14 @@
         "tags": ["viral", "hot"],
         "date": "2023-06-12"
     }
+    {
+        "id": "5",
+        "title": "Anime - June Edition",
+        "thumbnail": "https://example.com/thumbs/4.jpg",
+        "doodstream": "https://doodstream.com/embed/jkl012",
+        "terabox": "https://terabox.com/embed/opq345",
+        "categories": ["trending"],
+        "tags": ["viral", "hot"],
+        "date": "2023-06-12"
+    }
 ]
