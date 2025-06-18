@@ -1,11 +1,6 @@
 [build]
-  command = "echo 'No build needed'"
+  command = "echo 'No build needed for static site'"
   publish = "."
-
-[[headers]]
-  for = "/admin/*"
-  [headers.values]
-    Basic-Auth = "$2a$12$VOBKojttjGaIJv3RoE5JSOsMPXx7fbL9mjvL/Ci5EYbeo0F5dqHua"
 
 [[redirects]]
   from = "/admin/*"
