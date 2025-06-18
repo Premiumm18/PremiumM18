@@ -1,238 +1,128 @@
-// Admin panel functionality
-document.addEventListener('DOMContentLoaded', function() {
-    // DOM elements
-    const navLinks = document.querySelectorAll('.nav-link');
-    const sections = document.querySelectorAll('.admin-section');
-    const addVideoBtn = document.getElementById('add-video-btn');
-    const videoForm = document.getElementById('video-form');
-    const cancelEditBtn = document.getElementById('cancel-edit');
-    const videoList = document.getElementById('video-list');
-    const adminSearch = document.getElementById('admin-search');
-    const adminSearchBtn = document.getElementById('admin-search-btn');
-    
-    // State variables
-    let videos = [];
-    let currentVideoId = null;
-    
-    // Initialize the admin panel
-    initAdmin();
-    
-    // Event listeners
-    navLinks.forEach(link => {
-        link.addEventListener('click', (e) => {
-            e.preventDefault();
-            const sectionId = link.dataset.section + '-section';
-            
-            // Update active nav link
-            navLinks.forEach(l => l.classList.remove('active'));
-            link.classList.add('active');
-            
-            // Show selected section
-            sections.forEach(s => s.classList.add('hidden'));
-            document.getElementById(sectionId).classList.remove('hidden');
-        });
-    });
-    
-    addVideoBtn.addEventListener('click', showAddVideoForm);
-    cancelEditBtn.addEventListener('click', cancelEdit);
-    videoForm.addEventListener('submit', handleVideoSubmit);
-    adminSearchBtn.addEventListener('click', performAdminSearch);
-    adminSearch.addEventListener('keypress', (e) => {
-        if (e.key === 'Enter') performAdminSearch();
-    });
-    
-    // Functions
-    async function initAdmin() {
-        try {
-            const response = await fetch('../videos.json');
-            videos = await response.json();
-            renderVideoList(videos);
-        } catch (error) {
-            console.error('Error loading videos:', error);
-            videoList.innerHTML = '<p class="error">Failed to load videos. Please try again later.</p>';
-        }
-    }
-    
-    function renderVideoList(videosToRender) {
-        videoList.innerHTML = '';
-        
-        if (videosToRender.length === 0) {
-            videoList.innerHTML = '<p class="no-results">No videos found.</p>';
-            return;
-        }
-        
-        videosToRender.forEach(video => {
-            const videoItem = document.createElement('div');
-            videoItem.className = 'video-item';
-            videoItem.innerHTML = `
-                <div class="video-item-thumb">
-                    <img src="${video.thumbnail}" alt="${video.title}">
-                </div>
-                <div class="video-item-info">
-                    <h3>${video.title}</h3>
-                    <p>${video.categories.join(', ')}</p>
-                    <p>${new Date(video.date).toLocaleDateString()}</p>
-                </div>
-                <div class="video-item-actions">
-                    <button class="edit-btn" data-id="${video.id}"><i class="fas fa-edit"></i></button>
-                    <button class="delete-btn" data-id="${video.id}"><i class="fas fa-trash"></i></button>
-                </div>
-            `;
-            
-            videoList.appendChild(videoItem);
-        });
-        
-        // Add event listeners to edit/delete buttons
-        document.querySelectorAll('.edit-btn').forEach(btn => {
-            btn.addEventListener('click', () => editVideo(btn.dataset.id));
-        });
-        
-        document.querySelectorAll('.delete-btn').forEach(btn => {
-            btn.addEventListener('click', () => deleteVideo(btn.dataset.id));
-        });
-    }
-    
-    function showAddVideoForm() {
-        currentVideoId = null;
-        document.getElementById('add-edit-title').textContent = 'Add New Video';
-        document.getElementById('video-id').value = '';
-        document.getElementById('video-title').value = '';
-        document.getElementById('video-thumbnail').value = '';
-        document.getElementById('video-doodstream').value = '';
-        document.getElementById('video-terabox').value = '';
-        document.getElementById('video-tags').value = '';
-        document.getElementById('video-date').value = '';
-        
-        // Uncheck all category checkboxes
-        document.querySelectorAll('input[name="categories"]').forEach(checkbox => {
-            checkbox.checked = false;
-        });
-        
-        // Switch to add/edit section
-        sections.forEach(s => s.classList.add('hidden'));
-        document.getElementById('add-edit-section').classList.remove('hidden');
-    }
-    
-    function editVideo(videoId) {
-        const video = videos.find(v => v.id === videoId);
-        if (!video) return;
-        
-        currentVideoId = videoId;
-        document.getElementById('add-edit-title').textContent = 'Edit Video';
-        document.getElementById('video-id').value = video.id;
-        document.getElementById('video-title').value = video.title;
-        document.getElementById('video-thumbnail').value = video.thumbnail;
-        document.getElementById('video-doodstream').value = video.doodstream;
-        document.getElementById('video-terabox').value = video.terabox;
-        document.getElementById('video-tags').value = video.tags ? video.tags.join(', ') : '';
-        document.getElementById('video-date').value = video.date.split('T')[0];
-        
-        // Check appropriate category checkboxes
-        document.querySelectorAll('input[name="categories"]').forEach(checkbox => {
-            checkbox.checked = video.categories.includes(checkbox.value);
-        });
-        
-        // Switch to add/edit section
-        sections.forEach(s => s.classList.add('hidden'));
-        document.getElementById('add-edit-section').classList.remove('hidden');
-    }
-    
-    function cancelEdit() {
-        sections.forEach(s => s.classList.add('hidden'));
-        document.getElementById('videos-section').classList.remove('hidden');
-    }
-    
-    async function handleVideoSubmit(e) {
-        e.preventDefault();
-        
-        // Gather form data
-        const formData = {
-            id: document.getElementById('video-id').value || generateId(),
-            title: document.getElementById('video-title').value,
-            thumbnail: document.getElementById('video-thumbnail').value,
-            doodstream: document.getElementById('video-doodstream').value,
-            terabox: document.getElementById('video-terabox').value,
-            categories: Array.from(document.querySelectorAll('input[name="categories"]:checked')).map(cb => cb.value),
-            tags: document.getElementById('video-tags').value.split(',').map(tag => tag.trim()).filter(tag => tag),
-            date: document.getElementById('video-date').value
-        };
-        
-        try {
-            // Update or add the video
-            if (currentVideoId) {
-                // Update existing video
-                const index = videos.findIndex(v => v.id === currentVideoId);
-                if (index !== -1) {
-                    videos[index] = formData;
-                }
-            } else {
-                // Add new video
-                videos.push(formData);
-            }
-            
-            // Save to JSON file via Netlify function
-            await saveVideos(videos);
-            
-            // Return to video list
-            renderVideoList(videos);
-            cancelEdit();
-        } catch (error) {
-            console.error('Error saving video:', error);
-            alert('Failed to save video. Please try again.');
-        }
-    }
-    
-    async function deleteVideo(videoId) {
-        if (!confirm('Are you sure you want to delete this video?')) return;
-        
-        try {
-            // Remove the video
-            videos = videos.filter(v => v.id !== videoId);
-            
-            // Save to JSON file via Netlify function
-            await saveVideos(videos);
-            
-            // Update the list
-            renderVideoList(videos);
-        } catch (error) {
-            console.error('Error deleting video:', error);
-            alert('Failed to delete video. Please try again.');
-        }
-    }
-    
-    function performAdminSearch() {
-        const searchTerm = adminSearch.value.trim().toLowerCase();
-        
-        if (!searchTerm) {
-            renderVideoList(videos);
-            return;
-        }
-        
-        const filteredVideos = videos.filter(video => 
-            video.title.toLowerCase().includes(searchTerm) ||
-            (video.tags && video.tags.some(tag => tag.toLowerCase().includes(searchTerm)))
-        );
-        
-        renderVideoList(filteredVideos);
-    }
-    
-    function generateId() {
-        return Date.now().toString();
-    }
-    
-    async function saveVideos(updatedVideos) {
-        try {
-            // In a real implementation, this would call a Netlify function to update the JSON file
-            // For now, we'll just log it
-            console.log('Videos to save:', updatedVideos);
-            
-            // Simulate API call
-            await new Promise(resolve => setTimeout(resolve, 500));
-            
-            // In a real app, you would handle the response here
-            return true;
-        } catch (error) {
-            throw error;
-        }
-    }
+// Authentication Check
+if (!localStorage.getItem('adminAuth')) {
+  window.location.href = '/admin/login.html';
+}
+
+// DOM Elements
+const videoForm = document.getElementById('video-form');
+const videoList = document.getElementById('video-list');
+const searchInput = document.getElementById('admin-search');
+const logoutBtn = document.getElementById('logoutBtn');
+
+// Event Listeners
+videoForm.addEventListener('submit', handleSubmit);
+searchInput.addEventListener('input', debounce(loadVideos, 300));
+logoutBtn.addEventListener('click', () => {
+  localStorage.removeItem('adminAuth');
+  window.location.href = '/admin/login.html';
 });
+
+// Initial Load
+loadVideos();
+
+// ====================== FUNCTIONS ======================
+async function loadVideos() {
+  try {
+    const response = await fetch('/videos.json?t=' + Date.now());
+    const videos = await response.json();
+    renderVideos(videos);
+  } catch (error) {
+    console.error("Loading failed:", error);
+    showError("Failed to load videos");
+  }
+}
+
+function renderVideos(videos) {
+  const searchTerm = searchInput.value.toLowerCase();
+  videoList.innerHTML = videos
+    .filter(video => 
+      video.title.toLowerCase().includes(searchTerm) || 
+      video.tags?.some(tag => tag.toLowerCase().includes(searchTerm))
+    .map(video => `
+      <div class="video-item" data-id="${video.id}">
+        <img src="${video.thumbnail}" alt="${video.title}" class="video-thumb">
+        <div class="video-details">
+          <h3>${video.title}</h3>
+          <p>${video.categories.join(', ')}</p>
+          <div class="video-actions">
+            <button class="edit-btn">Edit</button>
+            <button class="delete-btn">Delete</button>
+          </div>
+        </div>
+      </div>
+    `).join('');
+
+  // Add event listeners
+  document.querySelectorAll('.edit-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      const videoId = e.target.closest('.video-item').dataset.id;
+      loadVideoForEdit(videoId);
+    });
+  });
+
+  document.querySelectorAll('.delete-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      const videoId = e.target.closest('.video-item').dataset.id;
+      deleteVideo(videoId);
+    });
+  });
+}
+
+async function handleSubmit(e) {
+  e.preventDefault();
+  
+  const videoData = {
+    id: document.getElementById('video-id').value || Date.now().toString(),
+    title: document.getElementById('video-title').value,
+    thumbnail: document.getElementById('video-thumbnail').value,
+    doodstream: document.getElementById('video-doodstream').value,
+    terabox: document.getElementById('video-terabox').value,
+    categories: Array.from(
+      document.querySelectorAll('input[name="categories"]:checked')
+    ).map(el => el.value),
+    tags: document.getElementById('video-tags').value.split(',').map(t => t.trim()),
+    date: new Date().toISOString()
+  };
+
+  try {
+    await saveVideo(videoData);
+    loadVideos();
+    videoForm.reset();
+    showSuccess("Video saved!");
+  } catch (error) {
+    showError("Failed to save video");
+  }
+}
+
+async function saveVideo(videoData) {
+  const currentVideos = await (await fetch('/videos.json')).json();
+  const updatedVideos = currentVideos.filter(v => v.id !== videoData.id).concat(videoData);
+
+  const response = await fetch('/.netlify/functions/update-videos', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': 'Basic ' + btoa('admin:yourpassword') // Match netlify.toml
+    },
+    body: JSON.stringify({ videos: updatedVideos })
+  });
+
+  if (!response.ok) throw new Error('Save failed');
+}
+
+// Utility Functions
+function debounce(func, delay) {
+  let timeout;
+  return (...args) => {
+    clearTimeout(timeout);
+    timeout = setTimeout(() => func(...args), delay);
+  };
+}
+
+function showSuccess(message) {
+  const toast = document.createElement('div');
+  toast.className = 'toast success';
+  toast.textContent = message;
+  document.body.appendChild(toast);
+  setTimeout(() => toast.remove(), 3000);
+}
