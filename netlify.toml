@@ -1,37 +1,11 @@
 [build]
-  command = "echo 'No build required for static site'"
+  command = "echo 'No build needed for static site'"
   publish = "."
-  functions = "functions"
-
-[dev]
-  framework = "#static"
-  targetPort = 3000
-  autoLaunch = true
-
-[context.production.environment]
-  NODE_VERSION = "18"
-  SECURE = "true"
-
-[[headers]]
-  for = "/*"
-  [headers.values]
-    Strict-Transport-Security = "max-age=63072000; includeSubDomains; preload"
-    X-Frame-Options = "DENY"
-    X-Content-Type-Options = "nosniff"
-    Referrer-Policy = "strict-origin-when-cross-origin"
-    Content-Security-Policy = "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:;"
-
-[[headers]]
-  for = "/admin/*"
-  [headers.values]
-    Basic-Auth = "admin:$2y$12$YOUR_BCRYPT_HASH" # Generate at: https://bcrypt-generator.com/
-    X-Robots-Tag = "noindex, nofollow"
 
 [[redirects]]
   from = "/admin/*"
   to = "/admin/index.html"
   status = 200
-  force = true
 
 [[redirects]]
   from = "/*"
@@ -40,6 +14,3 @@
 
 [functions]
   directory = "functions"
-  node_bundler = "esbuild"
-  external_node_modules = ["fs", "path"]
-  included_files = ["videos.json"]
