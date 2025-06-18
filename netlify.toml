@@ -1,5 +1,5 @@
 [build]
-  command = "echo 'Static site - no build required'"
+  command = "echo 'No build required for static site'"
   publish = "."
   functions = "functions"
 
@@ -11,7 +11,6 @@
 [context.production.environment]
   NODE_VERSION = "18"
   SECURE = "true"
-  CACHE_CONTROL = "max-age=3600, public"
 
 [[headers]]
   for = "/*"
@@ -25,7 +24,7 @@
 [[headers]]
   for = "/admin/*"
   [headers.values]
-    Basic-Auth = "admin:$2a$12$jaGMxtjEVdewLl0mEjc83O3ZLfD1vgPwZqKfH.tpP3quw0UMRthbK"
+    Basic-Auth = "admin:$2y$12$YOUR_BCRYPT_HASH" # Generate at: https://bcrypt-generator.com/
     X-Robots-Tag = "noindex, nofollow"
 
 [[redirects]]
