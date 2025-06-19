@@ -1,114 +1,110 @@
-// Ad management system
+<script>
+// Main ad initialization
 function initializeAds() {
-    // Only initialize if ads are allowed
     const consent = getConsent();
     if (!consent || !consent.adsAllowed) return;
-    
-    // Load Adsterra ads
+
     loadAdsterraAds();
-    
-    // Load PropellerAds
     loadPropellerAds();
-    
-    // Load OGAds
     loadOGAds();
-    
-    // Set up pop-under ads
     setupPopUnderAds();
 }
 
 function initializeMinimalAds() {
-    // Load only essential ads when user denies full consent
-    loadAdsterraBanners();
+    loadAdsterraBannerOnly();
 }
 
 function loadAdsterraAds() {
-    // Banner Ad
-    const bannerAd = document.createElement('div');
-    bannerAd.id = 'adsterra-banner';
-    bannerAd.style.width = '728px';
-    bannerAd.style.height = '90px';
-    bannerAd.style.margin = '20px auto';
-    bannerAd.style.backgroundColor = '#2f3542';
-    bannerAd.style.display = 'flex';
-    bannerAd.style.justifyContent = 'center';
-    bannerAd.style.alignItems = 'center';
-    bannerAd.style.color = 'white';
-    bannerAd.innerHTML = '<p>Adsterra Banner Ad</p>';
-    
-    // Insert after header
-    const header = document.querySelector('header');
-    header.insertAdjacentElement('afterend', bannerAd);
-    
-    // Native Ad
-    const nativeAd = document.createElement('div');
-    nativeAd.id = 'adsterra-native';
-    nativeAd.style.margin = '20px auto';
-    nativeAd.style.padding = '15px';
-    nativeAd.style.backgroundColor = '#2f3542';
-    nativeAd.style.borderRadius = '8px';
-    nativeAd.style.maxWidth = '300px';
-    nativeAd.innerHTML = `
-        <h3>Recommended Content</h3>
-        <p>Native ad content would appear here</p>
+    // ✅ Banner
+    const bannerScript = document.createElement('script');
+    bannerScript.type = 'text/javascript';
+    bannerScript.innerHTML = `
+        atOptions = {
+            'key' : 'f234672bd928711136ab51db135f5ab6',
+            'format' : 'iframe',
+            'height' : 60,
+            'width' : 468,
+            'params' : {}
+        };
     `;
-    
-    // Insert before footer
+    const bannerSrc = document.createElement('script');
+    bannerSrc.src = '//www.highperformanceformat.com/f234672bd928711136ab51db135f5ab6/invoke.js';
+    const header = document.querySelector('header');
+    header.insertAdjacentElement('afterend', bannerScript);
+    header.insertAdjacentElement('afterend', bannerSrc);
+
+    // ✅ Native
+    const nativeScript = document.createElement('script');
+    nativeScript.async = true;
+    nativeScript.setAttribute('data-cfasync', 'false');
+    nativeScript.src = '//pl26954880.profitableratecpm.com/ee85fefa867541e1001a5881a71226ff/invoke.js';
+
+    const nativeDiv = document.createElement('div');
+    nativeDiv.id = 'container-ee85fefa867541e1001a5881a71226ff';
+
     const footer = document.querySelector('footer');
-    footer.insertAdjacentElement('beforebegin', nativeAd);
-    
-    console.log('Adsterra ads loaded');
+    footer.insertAdjacentElement('beforebegin', nativeDiv);
+    footer.insertAdjacentElement('beforebegin', nativeScript);
+}
+
+function loadAdsterraBannerOnly() {
+    const bannerScript = document.createElement('script');
+    bannerScript.type = 'text/javascript';
+    bannerScript.innerHTML = `
+        atOptions = {
+            'key' : 'f234672bd928711136ab51db135f5ab6',
+            'format' : 'iframe',
+            'height' : 60,
+            'width' : 468,
+            'params' : {}
+        };
+    `;
+    const bannerSrc = document.createElement('script');
+    bannerSrc.src = '//www.highperformanceformat.com/f234672bd928711136ab51db135f5ab6/invoke.js';
+    const header = document.querySelector('header');
+    header.insertAdjacentElement('afterend', bannerScript);
+    header.insertAdjacentElement('afterend', bannerSrc);
 }
 
 function loadPropellerAds() {
-    // Push notification ads
-    console.log('Initializing PropellerAds push notifications');
-    
-    // This would be replaced with actual PropellerAds code
-    const pushScript = document.createElement('script');
-    pushScript.src = 'https://example.com/propellerads.js';
-    document.head.appendChild(pushScript);
+    const push = document.createElement('script');
+    push.src = 'https://grookilteepsou.net/act/files/tag.min.js?z=9466241';
+    push.setAttribute('data-cfasync', 'false');
+    push.async = true;
+    document.head.appendChild(push);
 }
 
 function loadOGAds() {
-    // CPA content locker
-    console.log('Initializing OGAds content locker');
-    
-    // This would be replaced with actual OGAds code
+    // Placeholder for your real OGAds locker script
     const ogScript = document.createElement('script');
     ogScript.src = 'https://example.com/ogads.js';
     document.head.appendChild(ogScript);
 }
 
 function setupPopUnderAds() {
-    // Pop-under ad logic
     window.addEventListener('click', function(e) {
-        // Check if the clicked element is a watch button
         if (e.target.closest('.watch-btn')) {
-            // Only trigger popunder if ads are allowed
             const consent = getConsent();
-            if (consent && consent.adsAllowed) {
-                // Random chance to show popunder (e.g., 30% chance)
-                if (Math.random() < 0.3) {
-                    triggerPopUnder();
-                }
+            if (consent && consent.adsAllowed && Math.random() < 0.3) {
+                triggerPopUnder();
             }
         }
     });
 }
 
 function triggerPopUnder() {
-    // This would be replaced with actual popunder code
-    console.log('Popunder ad triggered');
-    const popunder = window.open('https://example.com/popunder', '_blank', 'toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=yes,width=1,height=1');
-    if (popunder) {
-        setTimeout(() => {
-            popunder.close();
-        }, 100);
-    }
+    const popScript = document.createElement('script');
+    popScript.innerHTML = `(function(s,u,z,p){
+        s.src=u,s.setAttribute('data-zone',z),p.appendChild(s);
+    })(document.createElement('script'),
+        'https://al5sm.com/tag.min.js',
+        9466204,
+        document.body||document.documentElement);`;
+    document.body.appendChild(popScript);
 }
 
 function getConsent() {
     const consentString = localStorage.getItem('adultContentConsent');
     return consentString ? JSON.parse(consentString) : null;
 }
+</script>
