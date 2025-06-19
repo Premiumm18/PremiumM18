@@ -10,7 +10,7 @@ function initializeAds() {
     if (!consent || !consent.adsAllowed) return;
 
     loadAdsterraBanner();
-    loadAdsterraNativeCompact(); // Short native banner
+    loadAdsterraNativeFooter(); // Moved to footer
     loadPropellerAds();
     loadOGAds();
     setupPopUnderAds();
@@ -48,10 +48,10 @@ function loadAdsterraBanner() {
     document.querySelector("main").insertAdjacentElement("afterbegin", adWrap);
 }
 
-// ✅ Load Compact Native Banner in Header
-function loadAdsterraNativeCompact() {
+// ✅ Load Compact Native Banner in Footer
+function loadAdsterraNativeFooter() {
     const container = document.createElement("div");
-    container.id = "native-header-compact";
+    container.id = "native-footer-compact";
     container.style = `
         max-width: 320px;
         margin: 10px auto;
@@ -77,7 +77,8 @@ function loadAdsterraNativeCompact() {
     script.async = true;
     script.setAttribute("data-cfasync", "false");
 
-    document.querySelector("header").appendChild(container);
+    const footer = document.querySelector("footer");
+    footer.insertAdjacentElement("beforebegin", container);
     document.body.appendChild(script);
 }
 
