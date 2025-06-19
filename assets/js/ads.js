@@ -4,23 +4,26 @@ function getConsent() {
     return consentString ? JSON.parse(consentString) : null;
 }
 
-// ✅ Main ad init
+// ✅ Main ad initializer
 function initializeAds() {
     const consent = getConsent();
     if (!consent || !consent.adsAllowed) return;
 
     loadAdsterraBanner();
-    loadAdsterraNative();
+    loadAdsterraNativeCompact(); // Short native banner
     loadPropellerAds();
     loadOGAds();
     setupPopUnderAds();
+    setupSearchClickAd();        // Direct link on search bar
+    loadSocialBar();             // Load Social Bar
 }
 
+// ✅ Minimal (for non-consent users)
 function initializeMinimalAds() {
     loadAdsterraBanner();
 }
 
-// ✅ Load Adsterra Banner
+// ✅ Load Adsterra Banner (Main Mid-Banner)
 function loadAdsterraBanner() {
     const atScript = document.createElement("script");
     atScript.innerHTML = `
@@ -42,23 +45,31 @@ function loadAdsterraBanner() {
     adWrap.appendChild(atScript);
     adWrap.appendChild(loadScript);
 
-    document.querySelector("header").insertAdjacentElement("afterend", adWrap);
+    document.querySelector("main").insertAdjacentElement("afterbegin", adWrap);
 }
 
-// ✅ Load Adsterra Native Ad
-function loadAdsterraNative() {
-    const nativeScript = document.createElement("script");
-    nativeScript.async = true;
-    nativeScript.setAttribute("data-cfasync", "false");
-    nativeScript.src = "//pl26954880.profitableratecpm.com/ee85fefa867541e1001a5881a71226ff/invoke.js";
+// ✅ Load Compact Native Banner in Header
+function loadAdsterraNativeCompact() {
+    const container = document.createElement("div");
+    container.id = "native-header-compact";
+    container.style = `
+        max-width: 320px;
+        margin: 10px auto;
+        padding: 6px;
+        background-color: #2f2f2f;
+        border-radius: 8px;
+        text-align: center;
+        color: #ccc;
+        font-size: 12px;
+    `;
+    container.innerHTML = `
+        <h4 style="margin: 0 0 4px; color: #f1f1f1; font-size: 13px;">Sponsored</h4>
+        <div id="container-ee85fefa867541e1001a5881a71226ff"></div>
+        <script async="async" data-cfasync="false" src="//pl26954880.profitableratecpm.com/ee85fefa867541e1001a5881a71226ff/invoke.js"></script>
+    `;
 
-    const nativeDiv = document.createElement("div");
-    nativeDiv.id = "container-ee85fefa867541e1001a5881a71226ff";
-    nativeDiv.style = "margin: 20px auto;";
-
-    const footer = document.querySelector("footer");
-    footer.insertAdjacentElement("beforebegin", nativeDiv);
-    footer.insertAdjacentElement("beforebegin", nativeScript);
+    const header = document.querySelector("header");
+    header.insertAdjacentElement("beforeend", container);
 }
 
 // ✅ Load Propeller Push Ads
@@ -70,15 +81,15 @@ function loadPropellerAds() {
     document.body.appendChild(push);
 }
 
-// ✅ OGAds placeholder loader (replace when ready)
+// ✅ Load OGAds Locker Placeholder
 function loadOGAds() {
     const og = document.createElement("script");
-    og.src = "https://example.com/ogads.js"; // Replace this with real locker script
+    og.src = "https://example.com/ogads.js"; // Replace with your locker
     og.async = true;
     document.head.appendChild(og);
 }
 
-// ✅ Popunder on button click
+// ✅ Popunder on "Watch Now" Click
 function setupPopUnderAds() {
     document.addEventListener("click", function (e) {
         if (e.target.closest(".watch-btn")) {
@@ -99,4 +110,22 @@ function triggerPopUnder() {
         9466204,
         document.body||document.documentElement);`;
     document.body.appendChild(popScript);
+}
+
+// ✅ Trigger Direct Link Ad when user clicks search
+function setupSearchClickAd() {
+    const input = document.getElementById('search-input');
+    if (!input) return;
+
+    input.addEventListener('focus', function () {
+        window.open('https://www.profitableratecpm.com/bt6i7nqhpa?key=620d2b4b78f1a6dd2a09de39f9d8f3a7', '_blank');
+    }, { once: true });
+}
+
+// ✅ Load Social Bar Ad
+function loadSocialBar() {
+    const barScript = document.createElement("script");
+    barScript.type = "text/javascript";
+    barScript.src = "//pl26955824.profitableratecpm.com/75/e1/ce/75e1ce895f2268e593dacfa74eff73e2.js";
+    document.body.appendChild(barScript);
 }
