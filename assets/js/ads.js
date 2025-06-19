@@ -62,14 +62,23 @@ function loadAdsterraNativeCompact() {
         color: #ccc;
         font-size: 12px;
     `;
-    container.innerHTML = `
-        <h4 style="margin: 0 0 4px; color: #f1f1f1; font-size: 13px;">Sponsored</h4>
-        <div id="container-ee85fefa867541e1001a5881a71226ff"></div>
-        <script async="async" data-cfasync="false" src="//pl26954880.profitableratecpm.com/ee85fefa867541e1001a5881a71226ff/invoke.js"></script>
-    `;
 
-    const header = document.querySelector("header");
-    header.insertAdjacentElement("beforeend", container);
+    const label = document.createElement("h4");
+    label.innerText = "Sponsored";
+    label.style = "margin: 0 0 4px; color: #f1f1f1; font-size: 13px;";
+    container.appendChild(label);
+
+    const nativeDiv = document.createElement("div");
+    nativeDiv.id = "container-ee85fefa867541e1001a5881a71226ff";
+    container.appendChild(nativeDiv);
+
+    const script = document.createElement("script");
+    script.src = "//pl26954880.profitableratecpm.com/ee85fefa867541e1001a5881a71226ff/invoke.js";
+    script.async = true;
+    script.setAttribute("data-cfasync", "false");
+
+    document.querySelector("header").appendChild(container);
+    document.body.appendChild(script);
 }
 
 // ✅ Load Propeller Push Ads
@@ -84,7 +93,7 @@ function loadPropellerAds() {
 // ✅ Load OGAds Locker Placeholder
 function loadOGAds() {
     const og = document.createElement("script");
-    og.src = "https://example.com/ogads.js"; // Replace with your locker
+    og.src = "https://example.com/ogads.js"; // Replace with your real OGAds locker script
     og.async = true;
     document.head.appendChild(og);
 }
