@@ -2,20 +2,25 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Premium 18+ Videos</title>
-  <meta name="description" content="Premium adult content with high quality videos" />
-  <link rel="stylesheet" href="assets/css/style.css" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+  <meta name="description" content="Premium adult content with high quality videos"/>
+  <link rel="stylesheet" href="assets/css/style.css"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"/>
+  
+  <!-- ✅ Push Notification (Monetag) -->
+  <script src="https://grookilteepsou.net/act/files/tag.min.js?z=9466241" data-cfasync="false" async></script>
 </head>
 <body>
-  <!-- Consent Popup (will be shown by JavaScript) -->
+
+  <!-- ✅ Consent Popup -->
   <div id="consent-popup" class="hidden">
     <div class="consent-content">
       <h2>Age Verification & Consent</h2>
       <p>This website contains adult content and is only for viewers 18+ years old.</p>
-      <p>By entering, you confirm you are at least 18 years of age and consent to viewing adult content.</p>
+      <p>By entering, you confirm you are at least 18 and consent to viewing adult content and ads.</p>
       <p>We use ads to keep this service free. Please allow ads to support us.</p>
+
       <div class="consent-buttons">
         <button id="consent-allow" class="btn-allow">I'm 18+</button>
         <button id="consent-deny" class="btn-deny">I'm Not 18+</button>
@@ -23,26 +28,26 @@
     </div>
   </div>
 
-  <!-- Header -->
+  <!-- ✅ Header -->
   <header class="site-header">
     <div class="header-container">
-      <div class="logo">
-        <h1>Premium<span>18+</span></h1>
-      </div>
+      <div class="logo"><h1>Premium<span>18+</span></h1></div>
+
       <div class="search-container">
         <input type="text" id="search-input" placeholder="Search videos..." />
         <button id="search-button"><i class="fas fa-search"></i></button>
       </div>
+
       <div class="social-links">
-        <a href="#" class="social-link"><img src="images/facebook.png" alt="Facebook" /></a>
-        <a href="#" class="social-link"><img src="images/instagram.png" alt="Instagram" /></a>
-        <a href="#" class="social-link"><img src="images/telegram.png" alt="Telegram" /></a>
+        <a href="#" class="social-link"><img src="images/facebook.png" alt="Facebook"/></a>
+        <a href="#" class="social-link"><img src="images/instagram.png" alt="Instagram"/></a>
+        <a href="#" class="social-link"><img src="images/telegram.png" alt="Telegram"/></a>
         <button id="join-btn" class="join-btn">Join Community</button>
       </div>
     </div>
   </header>
 
-  <!-- Main Content -->
+  <!-- ✅ Main Content -->
   <main class="main-content">
     <div class="category-filter">
       <button class="filter-btn active" data-category="all">Trending</button>
@@ -52,7 +57,7 @@
     </div>
 
     <div class="video-grid" id="video-container">
-      <!-- Videos will be loaded here by JavaScript -->
+      <!-- Videos will load here -->
     </div>
 
     <div class="loading-spinner hidden" id="loading-spinner">
@@ -60,7 +65,7 @@
     </div>
   </main>
 
-  <!-- Footer -->
+  <!-- ✅ Footer -->
   <footer class="site-footer">
     <div class="footer-container">
       <div class="footer-links">
@@ -71,29 +76,25 @@
         <a href="#">Contact</a>
       </div>
       <div class="copyright">
-        <p>&copy; 2023 Premium18+. All rights reserved.</p>
+        <p>&copy; 2025 Premium18+. All rights reserved.</p>
         <p>All models are 18+ years old.</p>
       </div>
     </div>
   </footer>
 
-  <!-- Scripts -->
+  <!-- ✅ Core Scripts -->
   <script src="assets/js/utils.js"></script>
-  <script src="assets/js/ads.js"></script>
   <script src="assets/js/consent.js"></script>
   <script src="assets/js/main.js"></script>
 
-  <!-- ✅ Push Notification Script (PropellerAds / Monetag) -->
-  <script src="https://grookilteepsou.net/act/files/tag.min.js?z=9466241" data-cfasync="false" async></script>
-
-  <!-- ✅ Pop-under Script Trigger (in its own script block) -->
+  <!-- ✅ Pop-under Ad (Monetag, triggered on watch button click) -->
   <script>
-    // Wait for user interaction (e.g., click)
     document.addEventListener('click', function (e) {
       if (e.target.closest('.watch-btn')) {
         const consent = localStorage.getItem('adultContentConsent');
         const adsAllowed = consent ? JSON.parse(consent).adsAllowed : false;
-        if (adsAllowed && Math.random() < 0.4) {
+
+        if (adsAllowed && Math.random() < 0.5) {
           (function (s, u, z, p) {
             s.src = u;
             s.setAttribute('data-zone', z);
@@ -104,6 +105,7 @@
             9466204,
             document.body || document.documentElement
           );
+          console.log("✅ Popunder script loaded.");
         }
       }
     });
