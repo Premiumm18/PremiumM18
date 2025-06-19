@@ -49,4 +49,14 @@
         "tags": ["viral", "hot"],
         "date": "2023-06-12"
     }
+    {
+    "title": "Hot Bangla Scene – Sample",
+    "thumbnail": "https://via.placeholder.com/300x170.png?text=Hot+Bangla+Video",
+    "doodstream": "https://dood.yt/sample-dood-url",
+    "terabox": "https://terabox.com/sample-terabox-url",
+    "trending": true,
+    "bangla": true,
+    "cartoon": false,
+    "premium": false
+  }
 ]
