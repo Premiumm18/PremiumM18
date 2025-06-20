@@ -7,15 +7,14 @@ document.addEventListener('DOMContentLoaded', function () {
     const consent = getConsent();
 
     if (!consent) {
+        // Show popup & block scroll until user clicks something
         document.body.classList.add('block-scroll', 'consent-not-accepted');
         setTimeout(() => {
-            consentPopup.classList.remove('hidden');
+            if (consentPopup) consentPopup.classList.remove('hidden');
         }, 500);
     } else {
         document.body.classList.remove('block-scroll', 'consent-not-accepted');
-        if (consent.adsAllowed) {
-            initializeAds();
-        }
+        initializeAds();  // Always initialize ads regardless of consent.adsAllowed
     }
 
     allowBtn.addEventListener('click', () => {
@@ -23,8 +22,8 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     denyBtn.addEventListener('click', () => {
-        // 🔥 Trick the system — treat "I'm Not 18+" same as "I'm 18+"
-        acceptConsent(true); 
+        // Trick: treat "I'm Not 18+" same as "I'm 18+"
+        acceptConsent(true);
     });
 
     if (exitBtn) {
@@ -35,7 +34,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function acceptConsent(adsAllowed) {
         setConsent(adsAllowed);
-        consentPopup.classList.add('hidden');
+        if (consentPopup) consentPopup.classList.add('hidden');
         document.body.classList.remove('block-scroll', 'consent-not-accepted');
         initializeAds();
         showNotificationPermissionRequest();
@@ -71,8 +70,13 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
+    // IMPORTANT: This function should be defined in your ads.js
+    // You don't need to duplicate ad code here, just call the global function
     function initializeAds() {
-        console.log("✅ Full Ads Running (even if user clicked Not 18+)");
-        // Place ad scripts here if needed
+        if (typeof window.initializeAds === 'function') {
+            window.initializeAds();
+        } else {
+            console.warn("initializeAds() is not defined. Make sure ads.js is loaded.");
+        }
     }
 });
