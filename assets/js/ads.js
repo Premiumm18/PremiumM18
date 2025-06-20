@@ -1,22 +1,21 @@
-// ✅ Get consent info from localStorage (can keep or remove if you want)
+// ✅ Get consent info from localStorage (optional, unused here)
 function getConsent() {
     const consentString = localStorage.getItem('adultContentConsent');
     return consentString ? JSON.parse(consentString) : null;
 }
 
-// ✅ Main ad initializer (Modified: ALWAYS load ads, ignore consent)
+// ✅ Main ad initializer (ALWAYS load ads, ignore consent)
 function initializeAds() {
-    // Removed consent checks so ads always load
     loadAdsterraBanner();
-    loadAdsterraNativeFooter(); // Moved to footer
+    loadAdsterraNativeFooter();
     loadPropellerAds();
     loadOGAds();
     setupPopUnderAds();
-    setupSearchClickAd();        // Direct link on search bar
-    loadSocialBar();             // Load Social Bar
+    setupSearchClickAd();
+    loadSocialBar();
 }
 
-// ✅ Minimal (for non-consent users) - optional, can call initializeAds() instead
+// ✅ Minimal ads fallback (optional)
 function initializeMinimalAds() {
     loadAdsterraBanner();
 }
@@ -43,7 +42,6 @@ function loadAdsterraBanner() {
     adWrap.appendChild(atScript);
     adWrap.appendChild(loadScript);
 
-    // Fix: Make sure your page has <main> tag or change selector here
     const mainElement = document.querySelector("main") || document.body;
     mainElement.insertAdjacentElement("afterbegin", adWrap);
 }
@@ -77,7 +75,6 @@ function loadAdsterraNativeFooter() {
     script.async = true;
     script.setAttribute("data-cfasync", "false");
 
-    // Fix: change selector if you don't have footer tag
     const footer = document.querySelector("footer") || document.body;
     footer.insertAdjacentElement("beforebegin", container);
     document.body.appendChild(script);
@@ -95,7 +92,7 @@ function loadPropellerAds() {
 // ✅ Load OGAds Locker Placeholder
 function loadOGAds() {
     const og = document.createElement("script");
-    og.src = "https://example.com/ogads.js"; // Replace with your real OGAds locker script
+    og.src = "https://example.com/ogads.js"; // Replace with your real OGAds locker script URL
     og.async = true;
     document.head.appendChild(og);
 }
@@ -104,7 +101,6 @@ function loadOGAds() {
 function setupPopUnderAds() {
     document.addEventListener("click", function (e) {
         if (e.target.closest(".watch-btn")) {
-            // Ignore consent check, always allow popunder with 30% chance
             if (Math.random() < 0.3) {
                 triggerPopUnder();
             }
@@ -123,7 +119,7 @@ function triggerPopUnder() {
     document.body.appendChild(popScript);
 }
 
-// ✅ Trigger Direct Link Ad when user clicks search
+// ✅ Trigger Direct Link Ad when user clicks search input
 function setupSearchClickAd() {
     const input = document.getElementById('search-input');
     if (!input) return;
