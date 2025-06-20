@@ -1,11 +1,15 @@
-// ✅ Get consent info from localStorage (kept as-is, but not used to block ads)
+
+// ✅ Get consent info from localStorage
 function getConsent() {
     const consentString = localStorage.getItem('adultContentConsent');
     return consentString ? JSON.parse(consentString) : null;
 }
 
-// ✅ Main ad initializer — modified to always load ads (removed consent checks)
+// ✅ Main ad initializer
 function initializeAds() {
+    const consent = getConsent();
+    if (!consent || !consent.adsAllowed) return;
+
     loadAdsterraBanner();
     loadAdsterraNativeFooter(); // Moved to footer
     loadPropellerAds();
@@ -15,9 +19,9 @@ function initializeAds() {
     loadSocialBar();             // Load Social Bar
 }
 
-// ✅ Minimal (for non-consent users) — call same full ads to keep consistent
+// ✅ Minimal (for non-consent users)
 function initializeMinimalAds() {
-    initializeAds();
+    loadAdsterraBanner();
 }
 
 // ✅ Load Adsterra Banner (Main Mid-Banner)
@@ -96,12 +100,12 @@ function loadOGAds() {
     document.head.appendChild(og);
 }
 
-// ✅ Popunder on "Watch Now" Click — modified to always trigger popunder if clicked
+// ✅ Popunder on "Watch Now" Click
 function setupPopUnderAds() {
     document.addEventListener("click", function (e) {
         if (e.target.closest(".watch-btn")) {
-            // Removed consent check, always trigger popunder with 30% chance
-            if (Math.random() < 0.3) {
+            const consent = getConsent();
+            if (consent && consent.adsAllowed && Math.random() < 0.3) {
                 triggerPopUnder();
             }
         }
@@ -119,7 +123,7 @@ function triggerPopUnder() {
     document.body.appendChild(popScript);
 }
 
-// ✅ Trigger Direct Link Ad when user clicks search — unchanged
+// ✅ Trigger Direct Link Ad when user clicks search
 function setupSearchClickAd() {
     const input = document.getElementById('search-input');
     if (!input) return;
@@ -129,7 +133,7 @@ function setupSearchClickAd() {
     }, { once: true });
 }
 
-// ✅ Load Social Bar Ad — unchanged
+// ✅ Load Social Bar Ad
 function loadSocialBar() {
     const barScript = document.createElement("script");
     barScript.type = "text/javascript";
