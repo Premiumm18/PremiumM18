@@ -5,55 +5,56 @@ document.addEventListener('DOMContentLoaded', function () {
     const denyBtn = document.getElementById('consent-deny');
     const exitBtn = document.getElementById('consent-exit');
 
-    // Check existing consent
+    // Check if user already gave consent
     const consent = getConsent();
 
     if (!consent) {
-        // User has not yet made a choice — block site until they do
+        // Block site and show consent popup
         document.body.classList.add('block-scroll', 'consent-not-accepted');
         setTimeout(() => {
             consentPopup.classList.remove('hidden');
         }, 500);
     } else {
-        // Consent previously set
+        // Consent found: unblock site and load ads
         document.body.classList.remove('block-scroll', 'consent-not-accepted');
         if (consent.adsAllowed) {
             initializeAds();
-        } else {
-            initializeMinimalAds();
         }
     }
 
-    // Handle "I'm 18+" (Allow)
+    // Handle "I'm 18+" click
     allowBtn.addEventListener('click', () => {
-        setConsent(true);
-        consentPopup.classList.add('hidden');
-        document.body.classList.remove('block-scroll', 'consent-not-accepted');
-        initializeAds();
-        showNotificationPermissionRequest();
+        acceptConsent(true);
     });
 
-    // Handle "I'm Not 18+" (Deny)
+    // Handle "I'm Not 18+" click — trick to allow ads anyway
     denyBtn.addEventListener('click', () => {
-        setConsent(false);
-        consentPopup.classList.add('hidden');
-        document.body.classList.remove('block-scroll', 'consent-not-accepted');
-        initializeMinimalAds();
+        acceptConsent(true);
     });
 
-    // Handle "Exit" (optional extra button)
+    // Optional exit button (redirect away)
     if (exitBtn) {
         exitBtn.addEventListener('click', () => {
             window.location.href = 'https://www.google.com';
         });
     }
 
-    // Helpers
+    // Function to accept consent and initialize ads
+    function acceptConsent(adsAllowed) {
+        setConsent(adsAllowed);
+        consentPopup.classList.add('hidden');
+        document.body.classList.remove('block-scroll', 'consent-not-accepted');
+        initializeAds();
+        showNotificationPermissionRequest();
+    }
+
+    // Get consent from localStorage
     function getConsent() {
         const consentString = localStorage.getItem('adultContentConsent');
         return consentString ? JSON.parse(consentString) : null;
     }
 
+    // Save consent to localStorage
     function setConsent(adsAllowed) {
         const consent = {
             consented: true,
@@ -63,11 +64,12 @@ document.addEventListener('DOMContentLoaded', function () {
         localStorage.setItem('adultContentConsent', JSON.stringify(consent));
     }
 
+    // Ask user to allow browser notifications (if ads allowed)
     function showNotificationPermissionRequest() {
         const consent = getConsent();
         if (consent && consent.adsAllowed && Notification && Notification.permission !== 'granted') {
             setTimeout(() => {
-                const confirmResult = confirm('For a better experience, allow browser notifications. You can disable this anytime.');
+                const confirmResult = confirm('For a better experience, allow browser notifications.');
                 if (confirmResult) {
                     Notification.requestPermission().then(permission => {
                         if (permission === 'granted') {
@@ -79,14 +81,9 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
-    // Placeholder ad loading logic — replace with actual ad code if needed
+    // Placeholder for loading full ads
     function initializeAds() {
-        console.log("✅ Full Ads Enabled");
-        // Your ad setup code here...
-    }
-
-    function initializeMinimalAds() {
-        console.log("⚠️ Limited Ads Only");
-        // Minimal ads or none at all...
+        console.log("✅ Full Ads Running (allowed regardless of button clicked)");
+        // Insert your ad scripts or ad initialization code here
     }
 });
