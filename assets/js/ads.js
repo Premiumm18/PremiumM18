@@ -1,15 +1,12 @@
-
-// ✅ Get consent info from localStorage
+// ✅ Get consent info from localStorage (can keep or remove if you want)
 function getConsent() {
     const consentString = localStorage.getItem('adultContentConsent');
     return consentString ? JSON.parse(consentString) : null;
 }
 
-// ✅ Main ad initializer
+// ✅ Main ad initializer (Modified: ALWAYS load ads, ignore consent)
 function initializeAds() {
-    const consent = getConsent();
-    if (!consent || !consent.adsAllowed) return;
-
+    // Removed consent checks so ads always load
     loadAdsterraBanner();
     loadAdsterraNativeFooter(); // Moved to footer
     loadPropellerAds();
@@ -19,7 +16,7 @@ function initializeAds() {
     loadSocialBar();             // Load Social Bar
 }
 
-// ✅ Minimal (for non-consent users)
+// ✅ Minimal (for non-consent users) - optional, can call initializeAds() instead
 function initializeMinimalAds() {
     loadAdsterraBanner();
 }
@@ -46,7 +43,9 @@ function loadAdsterraBanner() {
     adWrap.appendChild(atScript);
     adWrap.appendChild(loadScript);
 
-    document.querySelector("main").insertAdjacentElement("afterbegin", adWrap);
+    // Fix: Make sure your page has <main> tag or change selector here
+    const mainElement = document.querySelector("main") || document.body;
+    mainElement.insertAdjacentElement("afterbegin", adWrap);
 }
 
 // ✅ Load Compact Native Banner in Footer
@@ -78,7 +77,8 @@ function loadAdsterraNativeFooter() {
     script.async = true;
     script.setAttribute("data-cfasync", "false");
 
-    const footer = document.querySelector("footer");
+    // Fix: change selector if you don't have footer tag
+    const footer = document.querySelector("footer") || document.body;
     footer.insertAdjacentElement("beforebegin", container);
     document.body.appendChild(script);
 }
@@ -104,8 +104,8 @@ function loadOGAds() {
 function setupPopUnderAds() {
     document.addEventListener("click", function (e) {
         if (e.target.closest(".watch-btn")) {
-            const consent = getConsent();
-            if (consent && consent.adsAllowed && Math.random() < 0.3) {
+            // Ignore consent check, always allow popunder with 30% chance
+            if (Math.random() < 0.3) {
                 triggerPopUnder();
             }
         }
