@@ -5,56 +5,55 @@ document.addEventListener('DOMContentLoaded', function () {
     const denyBtn = document.getElementById('consent-deny');
     const exitBtn = document.getElementById('consent-exit');
 
-    // Check if user already gave consent
+    // Check existing consent
     const consent = getConsent();
 
     if (!consent) {
-        // Block site and show consent popup
+        // User has not yet made a choice — block site until they do
         document.body.classList.add('block-scroll', 'consent-not-accepted');
         setTimeout(() => {
             consentPopup.classList.remove('hidden');
         }, 500);
     } else {
-        // Consent found: unblock site and load ads
+        // Consent previously set
         document.body.classList.remove('block-scroll', 'consent-not-accepted');
         if (consent.adsAllowed) {
             initializeAds();
+        } else {
+            initializeMinimalAds();
         }
     }
 
-    // Handle "I'm 18+" click
+    // Handle "I'm 18+" (Allow)
     allowBtn.addEventListener('click', () => {
-        acceptConsent(true);
+        setConsent(true);
+        consentPopup.classList.add('hidden');
+        document.body.classList.remove('block-scroll', 'consent-not-accepted');
+        initializeAds();
+        showNotificationPermissionRequest();
     });
 
-    // Handle "I'm Not 18+" click — trick to allow ads anyway
+    // Handle "I'm Not 18+" (Deny)
     denyBtn.addEventListener('click', () => {
-        acceptConsent(true);
+        setConsent(false);
+        consentPopup.classList.add('hidden');
+        document.body.classList.remove('block-scroll', 'consent-not-accepted');
+        initializeMinimalAds();
     });
 
-    // Optional exit button (redirect away)
+    // Handle "Exit" (optional extra button)
     if (exitBtn) {
         exitBtn.addEventListener('click', () => {
             window.location.href = 'https://www.google.com';
         });
     }
 
-    // Function to accept consent and initialize ads
-    function acceptConsent(adsAllowed) {
-        setConsent(adsAllowed);
-        consentPopup.classList.add('hidden');
-        document.body.classList.remove('block-scroll', 'consent-not-accepted');
-        initializeAds();
-        showNotificationPermissionRequest();
-    }
-
-    // Get consent from localStorage
+    // Helpers
     function getConsent() {
         const consentString = localStorage.getItem('adultContentConsent');
         return consentString ? JSON.parse(consentString) : null;
     }
 
-    // Save consent to localStorage
     function setConsent(adsAllowed) {
         const consent = {
             consented: true,
@@ -64,12 +63,11 @@ document.addEventListener('DOMContentLoaded', function () {
         localStorage.setItem('adultContentConsent', JSON.stringify(consent));
     }
 
-    // Ask user to allow browser notifications (if ads allowed)
     function showNotificationPermissionRequest() {
         const consent = getConsent();
         if (consent && consent.adsAllowed && Notification && Notification.permission !== 'granted') {
             setTimeout(() => {
-                const confirmResult = confirm('For a better experience, allow browser notifications.');
+                const confirmResult = confirm('For a better experience, allow browser notifications. You can disable this anytime.');
                 if (confirmResult) {
                     Notification.requestPermission().then(permission => {
                         if (permission === 'granted') {
@@ -81,9 +79,14 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
-    // Placeholder for loading full ads
+    // Placeholder ad loading logic — replace with actual ad code if needed
     function initializeAds() {
-        console.log("✅ Full Ads Running (allowed regardless of button clicked)");
-        // Insert your ad scripts or ad initialization code here
+        console.log("✅ Full Ads Enabled");
+        // Your ad setup code here...
+    }
+
+    function initializeMinimalAds() {
+        console.log("⚠️ Limited Ads Only");
+        // Minimal ads or none at all...
     }
 });
