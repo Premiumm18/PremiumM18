@@ -1,3 +1,4 @@
+
 /* Base Styles */
 :root {
     --primary-color: #ff4757;
@@ -246,6 +247,7 @@ body {
     letter-spacing: 0.5px;
 }
 
+
 /* Loading Spinner */
 .loading-spinner {
     display: flex;
@@ -311,17 +313,17 @@ body {
         flex-direction: column;
         gap: 1rem;
     }
-
+    
     .search-container {
         margin: 0;
         width: 100%;
     }
-
+    
     .social-links {
         width: 100%;
         justify-content: center;
     }
-
+    
     .video-grid {
         grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
     }
@@ -331,19 +333,8 @@ body {
     .video-grid {
         grid-template-columns: 1fr;
     }
-
+    
     .category-filter {
         justify-content: center;
     }
-}
-
-/* 🔒 Consent Protection for 18+ Popup */
-body.block-scroll {
-    overflow: hidden;
-}
-
-body.consent-not-accepted main,
-body.consent-not-accepted header,
-body.consent-not-accepted footer {
-    display: none !important;
 }
