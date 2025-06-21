@@ -95,27 +95,27 @@
     </section>
   </main>
 
-  <!-- Scripts -->
-  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js"></script>
+  <!-- Firebase SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/11.9.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/11.9.1/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/11.9.1/firebase-database.js"></script>
 
+  <!-- Your Firebase config and initialization -->
   <script>
     const firebaseConfig = {
       apiKey: "AIzaSyC_p2iYOTHmlHfxaH1NLIxTBcLwTY8UgXc",
       authDomain: "premium-videos-admin.firebaseapp.com",
-      databaseURL: "https://premium-videos-admin-default-rtdb.firebaseio.com",
       projectId: "premium-videos-admin",
-      storageBucket: "premium-videos-admin.appspot.com",
+      storageBucket: "premium-videos-admin.firebasestorage.app",
       messagingSenderId: "14153291045",
       appId: "1:14153291045:web:dab7f5b270ccf4627ab6cc",
       measurementId: "G-YB642WNF2Q"
     };
-
+    // Initialize Firebase
     firebase.initializeApp(firebaseConfig);
   </script>
 
-  <!-- Your Admin JS -->
+  <!-- Your admin.js script -->
   <script src="admin.js"></script>
 </body>
 </html>
