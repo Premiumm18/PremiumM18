@@ -3,119 +3,75 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Admin Panel - Premium 18+ Videos</title>
-
-  <!-- Styles -->
-  <link rel="stylesheet" href="../assets/css/style.css" />
+  <title>Admin Panel - Firebase</title>
   <link rel="stylesheet" href="admin.css" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
 </head>
 <body>
-  <header class="site-header">
-    <div class="header-container">
-      <div class="logo">
-        <h1>Admin<span>Panel</span></h1>
-      </div>
-      <nav class="admin-nav">
-        <a href="#" class="nav-link active" data-section="videos">Videos</a>
-        <a href="#" class="nav-link" data-section="categories">Categories</a>
-        <a href="#" class="nav-link" data-section="ads">Ad Settings</a>
-      </nav>
-      <button id="logout-btn" class="logout-btn">Logout</button>
-    </div>
-  </header>
-
-  <main class="admin-main">
-    <section id="videos-section" class="admin-section">
-      <h2>Video Management</h2>
-      <div class="admin-actions">
-        <button id="add-video-btn" class="admin-btn primary">Add New Video</button>
-        <div class="search-container">
-          <input type="text" id="admin-search" placeholder="Search videos...">
-          <button id="admin-search-btn"><i class="fas fa-search"></i></button>
-        </div>
-      </div>
-      <div class="video-list" id="video-list">
-        <!-- Videos will be loaded here -->
-      </div>
-    </section>
-
-    <section id="add-edit-section" class="admin-section hidden">
-      <h2 id="add-edit-title">Add New Video</h2>
-      <form id="video-form" class="admin-form">
-        <input type="hidden" id="video-id">
-        <div class="form-group">
-          <label for="video-title">Title</label>
-          <input type="text" id="video-title" required>
-        </div>
-        <div class="form-group">
-          <label for="video-thumbnail">Thumbnail URL</label>
-          <input type="url" id="video-thumbnail" required>
-        </div>
-        <div class="form-group">
-          <label for="video-doodstream">Doodstream URL</label>
-          <input type="url" id="video-doodstream" required>
-        </div>
-        <div class="form-group">
-          <label for="video-terabox">Terabox URL</label>
-          <input type="url" id="video-terabox" required>
-        </div>
-        <div class="form-group">
-          <label>Categories</label>
-          <div class="checkbox-group">
-            <label><input type="checkbox" name="categories" value="trending"> Trending</label>
-            <label><input type="checkbox" name="categories" value="bangla"> Bangla</label>
-            <label><input type="checkbox" name="categories" value="cartoon"> Cartoon/Hentai</label>
-            <label><input type="checkbox" name="categories" value="premium"> Premium</label>
-          </div>
-        </div>
-        <div class="form-group">
-          <label for="video-tags">Tags (comma separated)</label>
-          <input type="text" id="video-tags">
-        </div>
-        <div class="form-group">
-          <label for="video-date">Date</label>
-          <input type="date" id="video-date" required>
-        </div>
-        <div class="form-actions">
-          <button type="submit" class="admin-btn primary">Save Video</button>
-          <button type="button" id="cancel-edit" class="admin-btn secondary">Cancel</button>
-        </div>
-      </form>
-    </section>
-
-    <section id="categories-section" class="admin-section hidden">
-      <h2>Category Management</h2>
-      <p>Coming soon...</p>
-    </section>
-
-    <section id="ads-section" class="admin-section hidden">
-      <h2>Ad Settings</h2>
-      <p>Coming soon...</p>
-    </section>
-  </main>
+  <div class="admin-container">
+    <h2>Admin - Add New Video</h2>
+    <form id="video-form">
+      <input type="text" id="video-title" placeholder="Video Title" required />
+      <input type="url" id="video-thumbnail" placeholder="Thumbnail URL" required />
+      <input type="url" id="video-doodstream" placeholder="Doodstream URL" required />
+      <input type="url" id="video-terabox" placeholder="Terabox URL" required />
+      <input type="date" id="video-date" required />
+      <button type="submit">Save Video</button>
+    </form>
+    <p id="status"></p>
+    <button id="logout-btn">Logout</button>
+  </div>
 
   <!-- Firebase SDKs -->
-  <script src="https://www.gstatic.com/firebasejs/11.9.1/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/11.9.1/firebase-auth.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/11.9.1/firebase-database.js"></script>
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-app.js";
+    import { getDatabase, ref, set } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-database.js";
+    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-auth.js";
 
-  <!-- Your Firebase config and initialization -->
-  <script>
     const firebaseConfig = {
       apiKey: "AIzaSyC_p2iYOTHmlHfxaH1NLIxTBcLwTY8UgXc",
       authDomain: "premium-videos-admin.firebaseapp.com",
       projectId: "premium-videos-admin",
-      storageBucket: "premium-videos-admin.firebasestorage.app",
+      storageBucket: "premium-videos-admin.appspot.com",
       messagingSenderId: "14153291045",
-      appId: "1:14153291045:web:dab7f5b270ccf4627ab6cc",
-      measurementId: "G-YB642WNF2Q"
+      appId: "1:14153291045:web:dab7f5b270ccf4627ab6cc"
     };
-    // Initialize Firebase
-    firebase.initializeApp(firebaseConfig);
-  </script>
 
-  <!-- Your admin.js script -->
-  <script src="admin.js"></script>
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+    const auth = getAuth(app);
+
+    // 🔐 Auth Protection
+    onAuthStateChanged(auth, user => {
+      if (!user) window.location.href = "/admin/login.html";
+    });
+
+    // ✅ Save Video
+    document.getElementById('video-form').addEventListener('submit', async e => {
+      e.preventDefault();
+      const id = Date.now().toString();
+      const data = {
+        id,
+        title: document.getElementById('video-title').value,
+        thumbnail: document.getElementById('video-thumbnail').value,
+        doodstream: document.getElementById('video-doodstream').value,
+        terabox: document.getElementById('video-terabox').value,
+        date: document.getElementById('video-date').value
+      };
+
+      try {
+        await set(ref(db, "videos/" + id), data);
+        document.getElementById('status').innerText = "✅ Video saved!";
+        e.target.reset();
+      } catch (err) {
+        console.error(err);
+        document.getElementById('status').innerText = "❌ Failed to save.";
+      }
+    });
+
+    // 🔓 Logout
+    document.getElementById('logout-btn').addEventListener('click', () => {
+      signOut(auth).then(() => window.location.href = '/admin/login.html');
+    });
+  </script>
 </body>
 </html>
