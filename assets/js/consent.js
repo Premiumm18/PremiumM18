@@ -13,18 +13,24 @@ document.addEventListener('DOMContentLoaded', function () {
             if (consentPopup) consentPopup.classList.remove('hidden');
         }, 500);
     } else {
+        // Consent exists — unblock scroll & init ads
         document.body.classList.remove('block-scroll', 'consent-not-accepted');
         initializeAds();  // Always initialize ads regardless of consent.adsAllowed
     }
 
-    allowBtn.addEventListener('click', () => {
-        acceptConsent(true);
-    });
+    // Add event listeners safely (check for button existence)
+    if (allowBtn) {
+        allowBtn.addEventListener('click', () => {
+            acceptConsent(true);
+        });
+    }
 
-    denyBtn.addEventListener('click', () => {
-        // Trick: treat "I'm Not 18+" same as "I'm 18+"
-        acceptConsent(true);
-    });
+    if (denyBtn) {
+        denyBtn.addEventListener('click', () => {
+            // Treat "I'm Not 18+" same as allow (trick)
+            acceptConsent(true);
+        });
+    }
 
     if (exitBtn) {
         exitBtn.addEventListener('click', () => {
@@ -56,7 +62,12 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function showNotificationPermissionRequest() {
         const consent = getConsent();
-        if (consent && consent.adsAllowed && Notification && Notification.permission !== 'granted') {
+        if (
+            consent &&
+            consent.adsAllowed &&
+            "Notification" in window &&
+            Notification.permission !== 'granted'
+        ) {
             setTimeout(() => {
                 const confirmResult = confirm('For a better experience, allow browser notifications.');
                 if (confirmResult) {
@@ -70,8 +81,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
-    // IMPORTANT: This function should be defined in your ads.js
-    // You don't need to duplicate ad code here, just call the global function
+    // Initialize ads by calling global function from ads.js
     function initializeAds() {
         if (typeof window.initializeAds === 'function') {
             window.initializeAds();
