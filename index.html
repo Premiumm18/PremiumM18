@@ -8,6 +8,8 @@
   <link rel="stylesheet" href="assets/css/style.css" />
   <link rel="stylesheet" href="assets/css/consent.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
 </head>
 <body>
   <!-- Consent Popup -->
@@ -53,7 +55,7 @@
     </div>
 
     <div class="video-grid" id="video-container">
-      <!-- Videos will be loaded here by JavaScript -->
+      <!-- Videos loaded via Firebase -->
     </div>
 
     <div class="loading-spinner hidden" id="loading-spinner">
@@ -83,26 +85,27 @@
   <script src="assets/js/utils.js"></script>
   <script src="assets/js/ads.js"></script>
   <script>
-    let videosData = []; // store loaded videos globally
-    let currentCategory = 'all';
+    const firebaseConfig = {
+      apiKey: "AIzaSyC_p2iYOTHmlHfxaH1NLIxTBcLwTY8UgXc",
+      authDomain: "premium-videos-admin.firebaseapp.com",
+      projectId: "premium-videos-admin",
+      databaseURL: "https://premium-videos-admin-default-rtdb.firebaseio.com",
+      storageBucket: "premium-videos-admin.appspot.com",
+      messagingSenderId: "14153291045",
+      appId: "1:14153291045:web:dab7f5b270ccf4627ab6cc"
+    };
+    firebase.initializeApp(firebaseConfig);
 
-    // Fetch videos.json and display all videos initially
-    fetch('videos.json')
-      .then(res => res.json())
-      .then(videos => {
-        videosData = videos;
-        displayVideos(videosData);
-      });
+    const db = firebase.database();
+    const videoContainer = document.getElementById('video-container');
+    const loadingSpinner = document.getElementById('loading-spinner');
 
-    // Render videos in container
-    function displayVideos(videos) {
-      const container = document.getElementById('video-container');
-      container.innerHTML = ''; // clear previous content
-      if (videos.length === 0) {
-        container.innerHTML = '<p style="color: #fff; text-align:center;">No videos found.</p>';
-        return;
-      }
-      videos.forEach(video => {
+    loadingSpinner.classList.remove('hidden');
+
+    db.ref("videos").once('value').then(snapshot => {
+      const videos = snapshot.val();
+      if (!videos) return;
+      Object.values(videos).forEach(video => {
         const html = `
           <div class="video-card">
             <img src="${video.thumbnail}" alt="${video.title}" class="video-thumb" />
@@ -120,55 +123,9 @@
             </div>
           </div>
         `;
-        container.innerHTML += html;
+        videoContainer.innerHTML += html;
       });
-    }
-
-    // Search elements
-    const searchInput = document.getElementById('search-input');
-    const searchButton = document.getElementById('search-button');
-
-    // Filter buttons
-    const filterButtons = document.querySelectorAll('.filter-btn');
-
-    // Perform combined filtering: by category and search query
-    function filterVideos() {
-      const query = searchInput.value.trim().toLowerCase();
-      let filteredVideos = videosData;
-
-      // Filter by category/tag if not 'all'
-      if (currentCategory !== 'all') {
-        filteredVideos = filteredVideos.filter(video =>
-          video.category && video.category.toLowerCase() === currentCategory.toLowerCase()
-        );
-      }
-
-      // Filter by search query on title
-      if (query) {
-        filteredVideos = filteredVideos.filter(video =>
-          video.title.toLowerCase().includes(query)
-        );
-      }
-
-      displayVideos(filteredVideos);
-    }
-
-    // Search event listeners
-    searchButton.addEventListener('click', filterVideos);
-    searchInput.addEventListener('keypress', function(e) {
-      if (e.key === 'Enter') {
-        filterVideos();
-      }
-    });
-
-    // Category filter buttons event listeners
-    filterButtons.forEach(button => {
-      button.addEventListener('click', () => {
-        filterButtons.forEach(btn => btn.classList.remove('active'));
-        button.classList.add('active');
-        currentCategory = button.getAttribute('data-category');
-        filterVideos();
-      });
+      loadingSpinner.classList.add('hidden');
     });
   </script>
 
