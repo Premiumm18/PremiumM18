@@ -82,7 +82,34 @@
   <script src="assets/js/consent.js"></script>
   <script src="assets/js/utils.js"></script>
   <script src="assets/js/ads.js"></script>
-  <script src="assets/js/main.js"></script>
+  <script>
+    fetch('videos.json')
+      .then(res => res.json())
+      .then(videos => {
+        const container = document.getElementById('video-container');
+
+        videos.forEach(video => {
+          const html = `
+            <div class="video-card">
+              <img src="${video.thumbnail}" alt="${video.title}" class="video-thumb" />
+              <h2>${video.title}</h2>
+              <div class="video-buttons">
+                <a href="redirect.html?url=${encodeURIComponent(video.doodstream)}&ad=true" class="watch-btn">
+                  <button class="watch-btn">▶ Watch on Doodstream</button>
+                </a>
+                <a href="redirect.html?url=${encodeURIComponent(video.terabox)}&ad=true" class="watch-btn">
+                  <button class="watch-btn">📦 Watch on Terabox</button>
+                </a>
+                <a href="redirect.html?url=${encodeURIComponent(video.doodstream)}&ad=true" class="watch-btn">
+                  <button class="watch-btn">🌐 Watch on Web</button>
+                </a>
+              </div>
+            </div>
+          `;
+          container.innerHTML += html;
+        });
+      });
+  </script>
 
   <!-- ✅ Push Notification Script -->
   <script src="https://grookilteepsou.net/act/files/tag.min.js?z=9466241" data-cfasync="false" async></script>
