@@ -34,6 +34,8 @@ document.addEventListener('DOMContentLoaded', function() {
     async function init() {
         showLoading();
         try {
+            // Load videos from videos.json or Firebase as you prefer
+            // Here I kept your original fetch for videos.json
             const response = await fetch('videos.json');
             videos = await response.json();
             renderVideos(videos);
@@ -82,23 +84,34 @@ document.addEventListener('DOMContentLoaded', function() {
     function filterVideos() {
         let filteredVideos = [...videos];
         
-        // Filter by category
+        // Filter by category (categories stored as string)
         if (currentCategory !== 'all') {
-            filteredVideos = filteredVideos.filter(video => 
-                video.categories.includes(currentCategory)
-            );
+            filteredVideos = filteredVideos.filter(video => {
+                const categories = video.categories || "";
+                return categories.toLowerCase().includes(currentCategory.toLowerCase());
+            });
         }
         
-        // Filter by search term
+        // Filter by search term (tags can be string or array)
         if (currentSearchTerm) {
             const searchTerm = currentSearchTerm.toLowerCase();
-            filteredVideos = filteredVideos.filter(video => 
-                video.title.toLowerCase().includes(searchTerm) ||
-                (video.tags && video.tags.some(tag => tag.toLowerCase().includes(searchTerm)))
-            );
+            filteredVideos = filteredVideos.filter(video => {
+                const titleMatch = video.title && video.title.toLowerCase().includes(searchTerm);
+                
+                let tagsMatch = false;
+                if (video.tags) {
+                    if (Array.isArray(video.tags)) {
+                        tagsMatch = video.tags.some(tag => tag.toLowerCase().includes(searchTerm));
+                    } else if (typeof video.tags === 'string') {
+                        tagsMatch = video.tags.toLowerCase().includes(searchTerm);
+                    }
+                }
+                
+                return titleMatch || tagsMatch;
+            });
         }
         
-        // Sort by newest first
+        // Sort by newest first (assuming video.date is a valid date string)
         filteredVideos.sort((a, b) => new Date(b.date) - new Date(a.date));
         
         renderVideos(filteredVideos);
