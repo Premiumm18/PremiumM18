@@ -83,32 +83,68 @@
   <script src="assets/js/utils.js"></script>
   <script src="assets/js/ads.js"></script>
   <script>
+    let videosData = []; // store loaded videos globally
+
+    // Fetch videos.json and display all videos initially
     fetch('videos.json')
       .then(res => res.json())
       .then(videos => {
-        const container = document.getElementById('video-container');
-
-        videos.forEach(video => {
-          const html = `
-            <div class="video-card">
-              <img src="${video.thumbnail}" alt="${video.title}" class="video-thumb" />
-              <h2>${video.title}</h2>
-              <div class="video-buttons">
-                <a href="redirect.html?url=${encodeURIComponent(video.doodstream)}&ad=true" class="watch-btn">
-                  <button class="watch-btn">▶ Watch on Doodstream</button>
-                </a>
-                <a href="redirect.html?url=${encodeURIComponent(video.terabox)}&ad=true" class="watch-btn">
-                  <button class="watch-btn">📦 Watch on Terabox</button>
-                </a>
-                <a href="redirect.html?url=${encodeURIComponent(video.doodstream)}&ad=true" class="watch-btn">
-                  <button class="watch-btn">🌐 Watch on Web</button>
-                </a>
-              </div>
-            </div>
-          `;
-          container.innerHTML += html;
-        });
+        videosData = videos;
+        displayVideos(videosData);
       });
+
+    // Render videos in container
+    function displayVideos(videos) {
+      const container = document.getElementById('video-container');
+      container.innerHTML = ''; // clear previous content
+      videos.forEach(video => {
+        const html = `
+          <div class="video-card">
+            <img src="${video.thumbnail}" alt="${video.title}" class="video-thumb" />
+            <h2>${video.title}</h2>
+            <div class="video-buttons">
+              <a href="redirect.html?url=${encodeURIComponent(video.doodstream)}&ad=true" class="watch-btn">
+                <button class="watch-btn">▶ Watch on Doodstream</button>
+              </a>
+              <a href="redirect.html?url=${encodeURIComponent(video.terabox)}&ad=true" class="watch-btn">
+                <button class="watch-btn">📦 Watch on Terabox</button>
+              </a>
+              <a href="redirect.html?url=${encodeURIComponent(video.doodstream)}&ad=true" class="watch-btn">
+                <button class="watch-btn">🌐 Watch on Web</button>
+              </a>
+            </div>
+          </div>
+        `;
+        container.innerHTML += html;
+      });
+    }
+
+    // Search elements
+    const searchInput = document.getElementById('search-input');
+    const searchButton = document.getElementById('search-button');
+
+    // Perform search and display filtered videos
+    function performSearch() {
+      const query = searchInput.value.trim().toLowerCase();
+      if (!query) {
+        // If no query, show all videos
+        displayVideos(videosData);
+        return;
+      }
+      const filteredVideos = videosData.filter(video =>
+        video.title.toLowerCase().includes(query)
+      );
+      displayVideos(filteredVideos);
+    }
+
+    // Event listeners for search
+    searchButton.addEventListener('click', performSearch);
+    searchInput.addEventListener('keypress', function(e) {
+      if (e.key === 'Enter') {
+        performSearch();
+      }
+    });
+
   </script>
 
   <!-- ✅ Push Notification Script -->
