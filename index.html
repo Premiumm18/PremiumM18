@@ -84,6 +84,7 @@
   <script src="assets/js/ads.js"></script>
   <script>
     let videosData = []; // store loaded videos globally
+    let currentCategory = 'all';
 
     // Fetch videos.json and display all videos initially
     fetch('videos.json')
@@ -97,6 +98,10 @@
     function displayVideos(videos) {
       const container = document.getElementById('video-container');
       container.innerHTML = ''; // clear previous content
+      if (videos.length === 0) {
+        container.innerHTML = '<p style="color: #fff; text-align:center;">No videos found.</p>';
+        return;
+      }
       videos.forEach(video => {
         const html = `
           <div class="video-card">
@@ -123,28 +128,48 @@
     const searchInput = document.getElementById('search-input');
     const searchButton = document.getElementById('search-button');
 
-    // Perform search and display filtered videos
-    function performSearch() {
+    // Filter buttons
+    const filterButtons = document.querySelectorAll('.filter-btn');
+
+    // Perform combined filtering: by category and search query
+    function filterVideos() {
       const query = searchInput.value.trim().toLowerCase();
-      if (!query) {
-        // If no query, show all videos
-        displayVideos(videosData);
-        return;
+      let filteredVideos = videosData;
+
+      // Filter by category/tag if not 'all'
+      if (currentCategory !== 'all') {
+        filteredVideos = filteredVideos.filter(video =>
+          video.category && video.category.toLowerCase() === currentCategory.toLowerCase()
+        );
       }
-      const filteredVideos = videosData.filter(video =>
-        video.title.toLowerCase().includes(query)
-      );
+
+      // Filter by search query on title
+      if (query) {
+        filteredVideos = filteredVideos.filter(video =>
+          video.title.toLowerCase().includes(query)
+        );
+      }
+
       displayVideos(filteredVideos);
     }
 
-    // Event listeners for search
-    searchButton.addEventListener('click', performSearch);
+    // Search event listeners
+    searchButton.addEventListener('click', filterVideos);
     searchInput.addEventListener('keypress', function(e) {
       if (e.key === 'Enter') {
-        performSearch();
+        filterVideos();
       }
     });
 
+    // Category filter buttons event listeners
+    filterButtons.forEach(button => {
+      button.addEventListener('click', () => {
+        filterButtons.forEach(btn => btn.classList.remove('active'));
+        button.classList.add('active');
+        currentCategory = button.getAttribute('data-category');
+        filterVideos();
+      });
+    });
   </script>
 
   <!-- ✅ Push Notification Script -->
