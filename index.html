@@ -104,6 +104,7 @@
 
     db.ref("videos").once('value').then(snapshot => {
       const videos = snapshot.val();
+      loadingSpinner.classList.add('hidden');
       if (!videos) return;
       Object.values(videos).forEach(video => {
         const html = `
@@ -125,7 +126,6 @@
         `;
         videoContainer.innerHTML += html;
       });
-      loadingSpinner.classList.add('hidden');
     });
   </script>
 
