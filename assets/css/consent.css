@@ -1,3 +1,33 @@
+:root {
+    --primary-color: #ff4757;
+    --secondary-color: #57606f;
+    --dark-bg: #1e272e;
+    --darker-bg: #2f3542;
+    --light-text: #f1f2f6;
+    --dark-text: #2f3542;
+    --accent-color: #ff6b81;
+    --success-color: #2ed573;
+    --warning-color: #ffa502;
+    --error-color: #ff4757;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: var(--dark-bg);
+    color: var(--light-text);
+    line-height: 1.6;
+}
+
+.hidden {
+    display: none !important;
+}
+
 /* Consent Popup Styles */
 #consent-popup {
     position: fixed;
@@ -6,11 +36,12 @@
     right: 0;
     bottom: 0;
     background-color: rgba(0, 0, 0, 0.8);
-    z-index: 9999;
+    z-index: 99999; /* Very high z-index */
     display: flex;
     justify-content: center;
     align-items: center;
     backdrop-filter: blur(5px);
+    cursor: default; /* Allow clicks on buttons */
 }
 
 .consent-content {
@@ -47,6 +78,7 @@
     font-weight: 600;
     cursor: pointer;
     transition: all 0.3s;
+    z-index: 100000; /* Make sure buttons are above overlay */
 }
 
 .btn-allow {
@@ -77,4 +109,28 @@
 
 .btn-exit:hover {
     background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Social Media Icons Fix */
+.social-link img {
+    width: 24px;
+    height: 24px;
+    object-fit: contain;
+    transition: transform 0.3s;
+}
+
+.social-link:hover img {
+    transform: scale(1.1);
+}
+
+/* Block scroll when consent popup active */
+body.block-scroll {
+    overflow: hidden;
+}
+
+/* Hide main content if consent not accepted */
+body.consent-not-accepted main,
+body.consent-not-accepted header,
+body.consent-not-accepted footer {
+    display: none !important;
 }
