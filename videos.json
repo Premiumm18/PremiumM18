@@ -68,8 +68,19 @@
         "categories": ["trending"],
         "tags": ["viral", "hot"],
         "date": "2023-06-12"
+    },
+    {
+        "id": "8",
+        "title": "POST-107",
+        "thumbnail": "https://i.ibb.co.com/PsPHS9sp/image.png",
+        "doodstream": "https://d-s.io/e/uxha05jlxsoe",
+        "terabox": "https://d-s.io/e/uxha05jlxsoe",
+        "categories": ["trending"],
+        "tags": ["viral", "hot"],
+        "date": "2023-06-12"
     }
 ]
+
 
 
 
