@@ -192,14 +192,25 @@
     {
         "id": "20",
         "title": "POST-119",
-        "thumbnail": "https://dsimgcdn.com/splash/803pgbdobsd15k58.jpg",
-        "doodstream": "https://d-s.io/e/eduthqzzjnkx",
-        "terabox": "https://d-s.io/e/eduthqzzjnkx",
+        "thumbnail": "https://dsimgcdn.com/splash/i8xspny1vmf4c7nv.jpg",
+        "doodstream": "https://d-s.io/e/5ajxm58hv4qi",
+        "terabox": "https://d-s.io/e/5ajxm58hv4qi",
         "categories": ["trending"],
         "tags": ["viral", "hot"],
         "date": "2023-06-12"
     },
+    {
+        "id": "21",
+        "title": "POST-120",
+        "thumbnail": "https://dsimgcdn.com/snaps/y6v9gtl1stmez15s.jpg",
+        "doodstream": "https://d-s.io/e/oax8gfd7dbo8",
+        "terabox": "https://d-s.io/e/oax8gfd7dbo8",
+        "categories": ["trending"],
+        "tags": ["viral", "hot"],
+        "date": "2023-06-12"
+    }
 ]
+
 
 
 
