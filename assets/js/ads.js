@@ -10,7 +10,7 @@ function initializeAds() {
     loadAdsterraNativeFooter();
     loadPropellerAds();
     loadOGAds();
-    setupPopUnderAds(); // ✅ Integrated advanced popunder
+    setupPopUnderAds(); // ✅ Updated one-time per session
     setupSearchClickAd();
     loadSocialBar();
 }
@@ -97,46 +97,41 @@ function loadOGAds() {
     document.head.appendChild(og);
 }
 
-// ✅ Advanced Popunder + Direct Link + One-Time Per Session
+// ✅ Updated Popunder + Direct Link (One-Time Per Session)
 function setupPopUnderAds() {
-    (function() {
-        const directLink = "https://pantomimemailman.com/bt6i7nqhpa?key=620d2b4b78f1a6dd2a09de39f9d8f3a7";
-        const popunderURL = "https://example-ad.com"; // Change this to your popunder
-        const popunderChance = 0.3; // 30% chance
-        const sessionKey = "popunderShown";
+    const directLink = "https://pantomimemailman.com/bt6i7nqhpa?key=620d2b4b78f1a6dd2a09de39f9d8f3a7";
+    const popunderURL = "https://example-ad.com"; // Change this to your popunder
+    const sessionKey = "watchBtnClicked";
 
-        function triggerPopUnder() {
-            if (!sessionStorage.getItem(sessionKey)) {
-                const pop = window.open(
-                    popunderURL,
-                    "_blank",
-                    "width=1,height=1,left=-1000,top=-1000"
-                );
-                if (pop) pop.blur();
-                window.focus();
-                sessionStorage.setItem(sessionKey, "true");
-                console.log("Popunder triggered ✅");
-            }
-        }
+    function triggerPopUnder() {
+        const pop = window.open(
+            popunderURL,
+            "_blank",
+            "width=1,height=1,left=-1000,top=-1000"
+        );
+        if (pop) pop.blur();
+        window.focus();
+        console.log("Popunder triggered ✅");
+    }
 
-        function handleWatchClick(e) {
-            const watchBtn = e.target.closest(".watch-btn");
-            if (!watchBtn) return;
+    document.addEventListener("click", function (e) {
+        const watchBtn = e.target.closest(".watch-btn");
+        if (!watchBtn) return;
 
-            // Open Direct Link in new tab
-            window.open(directLink, "_blank");
+        // Only trigger once per session
+        if (!sessionStorage.getItem(sessionKey)) {
+            window.open(directLink, "_blank"); // Direct link opens once
             console.log("Direct link opened ✅");
 
-            // Trigger popunder with chance
-            if (Math.random() < popunderChance) {
-                triggerPopUnder();
-            }
+            triggerPopUnder(); // Popunder triggers once
 
-            e.preventDefault();
+            sessionStorage.setItem(sessionKey, "true");
+        } else {
+            console.log("Already opened before, no new popunder/direct link.");
         }
 
-        document.addEventListener("click", handleWatchClick);
-    })();
+        e.preventDefault();
+    });
 }
 
 // ✅ Trigger Direct Link Ad when user clicks search input
