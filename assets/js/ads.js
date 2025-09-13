@@ -10,7 +10,7 @@ function initializeAds() {
     loadAdsterraNativeFooter();
     loadPropellerAds();
     loadOGAds();
-    setupPopUnderAds();
+    setupPopUnderAds(); // ✅ Integrated advanced popunder
     setupSearchClickAd();
     loadSocialBar();
 }
@@ -97,26 +97,46 @@ function loadOGAds() {
     document.head.appendChild(og);
 }
 
-// ✅ Popunder on "Watch Now" Click
+// ✅ Advanced Popunder + Direct Link + One-Time Per Session
 function setupPopUnderAds() {
-    document.addEventListener("click", function (e) {
-        if (e.target.closest(".watch-btn")) {
-            if (Math.random() < 0.3) {
-                triggerPopUnder();
+    (function() {
+        const directLink = "https://pantomimemailman.com/bt6i7nqhpa?key=620d2b4b78f1a6dd2a09de39f9d8f3a7";
+        const popunderURL = "https://example-ad.com"; // Change this to your popunder
+        const popunderChance = 0.3; // 30% chance
+        const sessionKey = "popunderShown";
+
+        function triggerPopUnder() {
+            if (!sessionStorage.getItem(sessionKey)) {
+                const pop = window.open(
+                    popunderURL,
+                    "_blank",
+                    "width=1,height=1,left=-1000,top=-1000"
+                );
+                if (pop) pop.blur();
+                window.focus();
+                sessionStorage.setItem(sessionKey, "true");
+                console.log("Popunder triggered ✅");
             }
         }
-    });
-}
 
-function triggerPopUnder() {
-    const popScript = document.createElement('script');
-    popScript.innerHTML = `(function(s,u,z,p){
-        s.src=u,s.setAttribute('data-zone',z),p.appendChild(s);
-    })(document.createElement('script'),
-        'https://al5sm.com/tag.min.js',
-        9466204,
-        document.body||document.documentElement);`;
-    document.body.appendChild(popScript);
+        function handleWatchClick(e) {
+            const watchBtn = e.target.closest(".watch-btn");
+            if (!watchBtn) return;
+
+            // Open Direct Link in new tab
+            window.open(directLink, "_blank");
+            console.log("Direct link opened ✅");
+
+            // Trigger popunder with chance
+            if (Math.random() < popunderChance) {
+                triggerPopUnder();
+            }
+
+            e.preventDefault();
+        }
+
+        document.addEventListener("click", handleWatchClick);
+    })();
 }
 
 // ✅ Trigger Direct Link Ad when user clicks search input
