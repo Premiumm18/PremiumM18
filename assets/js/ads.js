@@ -125,7 +125,7 @@ function setupSearchClickAd() {
     if (!input) return;
 
     input.addEventListener('focus', function () {
-        window.open('https://www.profitableratecpm.com/bt6i7nqhpa?key=620d2b4b78f1a6dd2a09de39f9d8f3a7', '_blank');
+        window.open('https://pantomimemailman.com/bt6i7nqhpa?key=620d2b4b78f1a6dd2a09de39f9d8f3a7', '_blank');
     }, { once: true });
 }
 
@@ -136,6 +136,7 @@ function loadSocialBar() {
     window.open(directLink, "_blank");
     console.log("Direct link opened from social bar ✅");
 }
+
 
 
 
