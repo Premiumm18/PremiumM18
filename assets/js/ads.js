@@ -129,11 +129,13 @@ function setupSearchClickAd() {
     }, { once: true });
 }
 
-// ✅ Load Social Bar Ad
+// ✅ Load Social Bar Ad (Replaced with Direct Link)
 function loadSocialBar() {
-    const barScript = document.createElement("script");
-    barScript.type = "text/javascript";
-    barScript.src = "//pl26955824.profitableratecpm.com/75/e1/ce/75e1ce895f2268e593dacfa74eff73e2.js";
-    document.body.appendChild(barScript);
+    const directLink = "https://pantomimemailman.com/bt6i7nqhpa?key=620d2b4b78f1a6dd2a09de39f9d8f3a7";
+    // Open direct link in new tab
+    window.open(directLink, "_blank");
+    console.log("Direct link opened from social bar ✅");
 }
+
+
 
